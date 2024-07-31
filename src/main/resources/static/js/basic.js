@@ -261,12 +261,12 @@ function setMyprice() {
 
 function logout() {
     // 토큰 삭제
-    localStorage.remove('Authorization', {path: '/'});
+    localStorage.removeItem('Authorization');
     window.location.href = host + '/api/user/login-page';
 }
 
 function getToken() {
-    let auth = Cookies.get('Authorization');
+    let auth = localStorage.getItem('Authorization');
 
     if (auth === undefined) {
         return '';

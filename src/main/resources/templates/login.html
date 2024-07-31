@@ -35,7 +35,7 @@
 <script>
     $(document).ready(function () {
         // 토큰 삭제
-        Cookies.remove('Authorization', {path: '/'});
+        localStorage.removeItem('Authorization');
     });
 
     const href = location.href;
@@ -55,23 +55,36 @@
             type: "POST",
             url: `/api/user/login`,
             contentType: "application/json",
-            data: JSON.stringify({username: username, password: password}),
+            data: JSON.stringify({ username: username, password: password }),
         })
             .done(function (res, status, xhr) {
                 const token = xhr.getResponseHeader('Authorization');
 
-                Cookies.set('Authorization', token, {path: '/'})
+                if (token) {
+                    // 로컬 스토리지에 JWT 토큰 저장
+                    localStorage.setItem('Authorization', token);
 
-                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-                    jqXHR.setRequestHeader('Authorization', token);
-                });
+                    // 모든 AJAX 요청에 Authorization 헤더 추가
+                    $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                        jqXHR.setRequestHeader('Authorization', token);
+                    });
 
-                window.location.href = host;
+                    // 성공 시 홈 페이지로 리디렉션
+                    window.location.href = host;
+                } else {
+                    console.error('Authorization token not found in response');
+                    alert("Login Fail");
+                }
             })
             .fail(function (jqXHR, textStatus) {
                 alert("Login Fail");
-                window.location.href = host + '/api/user/login-page?error'
+                window.location.href = host + '/api/user/login-page?error';
             });
     }
+
+    $(document).ready(function () {
+        // 페이지 로드 시 이전 토큰 삭제 (테스트 및 로그인 상태 초기화를 위해)
+        localStorage.removeItem('Authorization');
+    });
 </script>
 </html>
