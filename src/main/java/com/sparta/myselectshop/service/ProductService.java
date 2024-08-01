@@ -110,4 +110,18 @@ public class ProductService {
 
 
     }
+
+    public Page<ProductResponseDto> getProductsInFolder(Long folderId, User user, int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+
+       Page<Product> products =productRepository.findAllByUserAndProductFolderList_FolderId(user,folderId,pageable);
+
+        return products.map(ProductResponseDto::new);
+
+
+
+    }
 }
