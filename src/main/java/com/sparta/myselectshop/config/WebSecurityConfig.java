@@ -1,4 +1,4 @@
-package com.sparta.myselectshop.security;
+package com.sparta.myselectshop.config;
 
 
 import com.sparta.myselectshop.jwt.JwtUtil;
