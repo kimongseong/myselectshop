@@ -2,7 +2,7 @@ package com.sparta.myselectshop.controller;
 
 import com.sparta.myselectshop.dto.FolderRequestDto;
 import com.sparta.myselectshop.dto.FolderResponseDto;
-import com.sparta.myselectshop.exception.RestApiException.RestApiException;
+import com.sparta.myselectshop.exception.RestApiException;
 import com.sparta.myselectshop.security.UserDetailsImpl;
 import com.sparta.myselectshop.service.FolderService;
 import lombok.RequiredArgsConstructor;
@@ -36,14 +36,5 @@ public class FolderController {
         return folderService.getFolders(userDetails.getUser());
     }
 
-    @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<RestApiException> handleException(IllegalArgumentException ex) {
-        RestApiException restApiException = new RestApiException(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<>(
-                // HTTP body
-                restApiException,
-                // HTTP status code
-                HttpStatus.BAD_REQUEST
-        );
-    }
+
 }
